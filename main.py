@@ -14,23 +14,34 @@ def welcome():
     password = request.form['password']
     verify = request.form['verify']
     email = request.form['email']
+    email_error = " "
+    username_error = " "
+    password_error = " "
+    verify_error  = " "
+    error = False 
+
     if not len(email) == 0 :
-            if not is_email(email) or not is_valid(email):
-                    error = 'BAD EMAIL'
-                    return redirect('/?error=' + error)
+            if not is_email(email) or not is_valid(email): 
+                    error = True
+                    email_error = "BAD EMAIL"
 
     if not is_valid(username):
-            error = 'BAD USERNAME'
-            return redirect('/?error=' + error)
+            error = True
+            username_error = "BAD USERNAME"
 
     if not is_valid(password):
-            error = 'BAD PASSWORD'
-            return redirect('/?error = ' + error)
+            error = True
+            password_error = "BAD PASSWORD"
 
     if verify != password:
-            error = 'BAD VERIFY'
-            return redirect('/?error =' + error)
-    return render_template('welcome.html', username = username)
+            error = True
+            verify_error = "BAD VERIFY"
+            
+    if error:
+            return render_template('index.html', email_error= email_error, username_error = username_error, password_error = password_error, verify_error =verify_error)
+           # return redirect('/?error' + email_error + username_error + password_error + verify_error)
+    else:
+            return render_template('welcome.html', username = username)
 
 
 def is_valid(string):
